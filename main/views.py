@@ -45,6 +45,53 @@ def list_users(request):
     })
 
 
+def edit_user(request, user_id):
+    """Редактирование пользователя"""
+    # Получаем пользователя или возвращаем 404
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == 'POST':
+        # Получаем данные из формы
+        name = request.POST.get('name', '').strip()
+        age = request.POST.get('age', '').strip()
+        email = request.POST.get('email', '').strip()
+
+        # Валидация
+        if not name or not age or not email:
+            messages.error(request, 'Все поля обязательны для заполнения!')
+            return render(request, 'main/edit_user.html', {'user': user})
+
+        try:
+            age = int(age)
+            if age <= 0 or age > 150:
+                messages.error(request, 'Возраст должен быть от 1 до 150 лет!')
+                return render(request, 'main/edit_user.html', {'user': user})
+        except ValueError:
+            messages.error(request, 'Возраст должен быть числом!')
+            return render(request, 'main/edit_user.html', {'user': user})
+
+        # Проверяем, не занят ли email другим пользователем (кроме текущего)
+        if User.objects.filter(email=email).exclude(id=user_id).exists():
+            messages.error(request, 'Пользователь с таким email уже существует!')
+            return render(request, 'main/edit_user.html', {'user': user})
+
+        # Обновляем данные пользователя
+        try:
+            user.name = name
+            user.age = age
+            user.email = email
+            user.save()
+
+            messages.success(request, f'✅ Данные пользователя "{name}" успешно обновлены!')
+            return redirect('list_users')
+        except Exception as e:
+            messages.error(request, f'Ошибка при обновлении: {str(e)}')
+            return render(request, 'main/edit_user.html', {'user': user})
+
+    # Если GET запрос - показываем форму редактирования
+    return render(request, 'main/edit_user.html', {'user': user})
+
+
 def register_view(request):
     """Регистрация нового пользователя"""
     if request.method == 'POST':

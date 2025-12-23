@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование пользователя</title>
+    <!-- Bootstrap для красоты -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        
+        .edit-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .edit-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .edit-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .edit-title {
+            color: #333;
+            font-weight: 700;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .edit-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .user-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px 15px 15px 45px;
+            font-size: 16px;
+            transition: all 0.3s;
+            height: 50px;
+            width: 100%;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+        
+        .btn-edit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-cancel {
+            background: white;
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+            justify-content: center;
+        }
+        
+        .btn-cancel:hover {
+            background: #f8f9fa;
+            color: #6c757d;
+            transform: translateY(-3px);
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .form-hint {
+            font-size: 13px;
+            color: #888;
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+        
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 576px) {
+            .edit-card {
+                padding: 30px 20px;
+            }
+            
+            .edit-title {
+                font-size: 26px;
+            }
+            
+            .form-control {
+                padding: 12px 12px 12px 40px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-card">
+        <!-- Иконка и заголовок -->
+        <div class="edit-icon">
+            <i class="fas fa-user-edit"></i>
+        </div>
+        
+        <h1 class="edit-title">
+            ✏️ Редактирование пользователя
+        </h1>
+        
+        <p class="edit-subtitle">
+            Обновите информацию о пользователе ниже
+        </p>
+        
+        <!-- Бейдж пользователя -->
+        <div class="user-badge">
+            <i class="fas fa-user-circle"></i>
+            Редактирование пользователя #{{ user.id }}
+        </div>
+        
+        <!-- Информация о пользователе -->
+        <div class="user-info">
+            <div class="info-row">
+                <span class="info-label">Текущее имя:</span>
+                <span class="info-value">{{ user.name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Текущий возраст:</span>
+                <span class="info-value">{{ user.age }} лет</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Текущий email:</span>
+                <span class="info-value">{{ user.email }}</span>
+            </div>
+            <div class="info-row" style="border-bottom: none;">
+                <span class="info-label">Дата регистрации:</span>
+                <span class="info-value">
+                    {% if user.created_at %}
+                        {{ user.created_at|date:"d.m.Y H:i" }}
+                    {% else %}
+                        Не указана
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <!-- Сообщения об успехе/ошибке -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {% if message.tags == 'success' %}
+                        <i class="fas fa-check-circle"></i>
+                    {% elif message.tags == 'error' %}
+                        <i class="fas fa-exclamation-circle"></i>
+                    {% else %}
+                        <i class="fas fa-info-circle"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Форма редактирования -->
+        <form method="POST" action="{% url 'edit_user' user.id %}">
+            {% csrf_token %}
+            
+            <!-- Поле: Имя -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i>
+                    Новое имя
+                </label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" 
+                           class="form-control" 
+                           name="name" 
+                           placeholder="Введите новое имя" 
+                           required
+                           value="{{ user.name }}">
+                </div>
+                <div class="form-hint">Минимум 2 символа, только буквы и пробелы</div>
+            </div>
+            
+            <!-- Поле: Возраст -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-birthday-cake"></i>
+                    Новый возраст
+                </label>
+                <div class="input-with-icon">
+                    <i class="fas fa-birthday-cake"></i>
+                    <input type="number" 
+                           class="form-control" 
+                           name="age" 
+                           placeholder="Введите новый возраст" 
+                           min="1" 
+                           max="120" 
+                           required
+                           value="{{ user.age }}">
+                </div>
+                <div class="form-hint">Возраст должен быть от 1 до 120 лет</div>
+            </div>
+            
+            <!-- Поле: Email -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    Новый email
+                </label>
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" 
+                           class="form-control" 
+                           name="email" 
+                           placeholder="example@domain.com" 
+                           required
+                           value="{{ user.email }}">
+                </div>
+                <div class="form-hint">Введите действующий email адрес</div>
+            </div>
+            
+            <!-- Кнопка сохранения -->
+            <button type="submit" class="btn-edit">
+                <i class="fas fa-save"></i>
+                Сохранить изменения
+            </button>
+        </form>
+        
+        <!-- Кнопки действий -->
+        <div class="action-buttons">
+            <a href="{% url 'list_users' %}" class="btn-cancel">
+                <i class="fas fa-times"></i>
+                Отмена
+            </a>
+            <a href="{% url 'user_detail' user.id %}" class="btn-cancel" style="background: #f8f9fa; color: #333;">
+                <i class="fas fa-eye"></i>
+                Просмотр профиля
+            </a>
+        </div>
+        
+        <!-- Дополнительная информация -->
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+            <p style="font-size: 13px; color: #888;">
+                <i class="fas fa-history"></i> Последнее изменение: {% now "d.m.Y H:i" %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Дополнительные скрипты -->
+    <script>
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.edit-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Фокус на первое поле
+            setTimeout(() => {
+                document.querySelector('input[name="name"]').focus();
+                document.querySelector('input[name="name"]').select();
+            }, 500);
+        });
+        
+        // Валидация формы
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const name = document.querySelector('input[name="name"]').value.trim();
+            const age = document.querySelector('input[name="age"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+            
+            let hasError = false;
+            let errorMessage = '';
+            
+            // Валидация имени
+            if (name.length < 2) {
+                errorMessage = 'Имя должно содержать минимум 2 символа';
+                hasError = true;
+                document.querySelector('input[name="name"]').style.borderColor = '#dc3545';
+            }
+            
+            // Валидация возраста
+            const ageNum = parseInt(age);
+            if (ageNum < 1 || ageNum > 120) {
+                errorMessage = 'Возраст должен быть от 1 до 120 лет';
+                hasError = true;
+                document.querySelector('input[name="age"]').style.borderColor = '#dc3545';
+            }
+            
+            // Валидация email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorMessage = 'Введите корректный email адрес';
+                hasError = true;
+                document.querySelector('input[name="email"]').style.borderColor = '#dc3545';
+            }
+            
+            if (hasError) {
+                e.preventDefault();
+                
+                // Показать сообщение об ошибке
+                let errorDiv = document.querySelector('.error-alert');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'alert alert-error error-alert';
+                    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
+                    document.querySelector('.edit-card').insertBefore(errorDiv, document.querySelector('form'));
+                } else {
+                    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
+                }
+                
+                // Анимация тряски
+                card.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    card.style.animation = '';
+                }, 500);
+            }
+        });
+        
+        // Эффект при наведении на кнопку
+        const submitBtn = document.querySelector('.btn-edit');
+        submitBtn.addEventListener('mouseenter', function() {
+            this.style.animation = 'pulse 0.5s';
+        });
+        
+        submitBtn.addEventListener('mouseleave', function() {
+            this.style.animation = '';
+        });
+        
+        // Добавляем стили для анимаций
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: translateY(-2px) scale(1); }
+                50% { transform: translateY(-2px) scale(1.05); }
+                100% { transform: translateY(-2px) scale(1); }
+            }
+            
+            @keyframes shake {
+                0%, 100% { transform: translateY(0) translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateY(0) translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateY(0) translateX(5px); }
+            }
+            
+            .form-control:invalid {
+                border-color: #dc3545 !important;
+            }
+            
+            .form-control:valid {
+                border-color: #28a745 !important;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Подтверждение при попытке уйти со страницы
+        let formChanged = false;
+        
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                formChanged = true;
+            });
+        });
+        
+        window.addEventListener('beforeunload', function(e) {
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = 'У вас есть несохранённые изменения. Вы уверены, что хотите покинуть страницу?';
+            }
+        });
+        
+        // Логирование в консоль
+        console.log('%c✏️ Страница редактирования пользователя загружена!', 'color: #667eea; font-size: 14px; font-weight: bold;');
+        console.log(`%cРедактирование пользователя: ${document.querySelector('.user-badge').textContent}`, 'color: #764ba2; font-size: 12px;');
+    </script>
+</body>
+</html>

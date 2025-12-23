@@ -304,14 +304,16 @@
         {{ user.created_at|date:"d.m.Y" }}<br>
         <small>{{ user.created_at|date:"H:i" }}</small>
     </span>
-</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{% url 'user_detail' user.id %}" class="btn-action btn-view">
-                                        👁️ Просмотр
-                                    </a>
-                                </div>
-                            </td>
+                </td>
+                                            <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'user_detail' user.id %}" class="btn-action btn-view">
+                            👁️ Просмотр
+                        </a>
+                        
+                        
+                    </div>
+                </td>
                         </tr>
                         {% endfor %}
                     </tbody>
