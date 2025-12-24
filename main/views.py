@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Avg, Max, Min, Sum
 from .models import User
+from django.db.models import Q
+
 
 
 def main(request):
@@ -15,34 +17,39 @@ def main_list(request):
 
 
 def list_users(request):
-    """Показать список всех пользователей"""
-    # Получаем всех пользователей из базы данных
-    users = User.objects.all().order_by('-created_at')
+    # Получаем параметр поиска из GET-запроса
+    search_query = request.GET.get('search', '')
 
-    # Рассчитываем статистику через агрегацию (быстрее и эффективнее)
+    # Берем всех пользователей
+    users = User.objects.all()
+
+    # Применяем фильтр, если есть поисковый запрос
+    if search_query:
+        users = users.filter(
+            Q(name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(age__icontains=search_query)
+        )
+
+    # Рассчитываем статистику для отфильтрованных пользователей
     total_users = users.count()
 
     if total_users > 0:
-        # Используем агрегатные функции Django для вычислений
-        stats = users.aggregate(
-            average_age=Avg('age'),
-            min_age=Min('age'),
-            max_age=Max('age')
-        )
-
-        average_age = stats['average_age'] or 0
-        min_age = stats['min_age']
-        max_age = stats['max_age']
+        average_age = users.aggregate(Avg('age'))['age__avg']
+        max_age = users.aggregate(Max('age'))['age__max']
     else:
-        average_age = min_age = max_age = 0
+        average_age = 0
+        max_age = None
 
-    return render(request, 'main/list_users.html', {
+    context = {
         'users': users,
         'total_users': total_users,
-        'average_age': round(average_age, 1),
-        'min_age': min_age,
-        'max_age': max_age
-    })
+        'average_age': average_age,
+        'max_age': max_age,
+        'search_query': search_query,
+    }
+
+    return render(request, 'main/list_users.html', context)
 
 
 def edit_user(request, user_id):
@@ -138,10 +145,22 @@ def register_view(request):
 
 
 def user_detail(request, user_id):
-    """Показать детальную информацию о пользователе"""
-    # Используем get_object_or_404 для автоматической обработки 404 ошибки
     user = get_object_or_404(User, id=user_id)
-    return render(request, 'main/user_detail.html', {'user': user})
+
+    # Рассчитываем время в системе
+    if user.created_at:
+        from django.utils import timezone
+        time_in_system = timezone.now() - user.created_at
+        time_in_system_display = time_in_system.days
+    else:
+        time_in_system_display = 0
+
+    context = {
+        'user': user,
+        'time_in_system': time_in_system_display,
+    }
+
+    return render(request, 'main/user_detail.html', context)
 
 
 def delete_user(request, user_id):

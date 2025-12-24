@@ -6,6 +6,8 @@
     <title>Список пользователей</title>
     <!-- Bootstrap для красоты -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -18,7 +20,7 @@
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             padding: 40px;
             margin: 20px auto;
         }
@@ -195,6 +197,98 @@
             font-size: 14px;
             color: #666;
         }
+        /* Стили для поиска */
+        .search-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .search-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .search-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .search-input-group {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 18px;
+        }
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .reset-btn:hover {
+            background: #5a6268;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .search-results-info {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .search-highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -204,45 +298,66 @@
             <span>👥</span> Список пользователей
         </h1>
 
-                <!-- Статистика -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <div class="stat-value">{{ total_users }}</div>
-                <div class="stat-label">Всего пользователей</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">
-                    {% if users %}
-                        {{ average_age|floatformat:1 }}
-                    {% else %}
-                        -
-                    {% endif %}
+        <!-- Блок поиска -->
+        <div class="search-container">
+            <h3 class="search-title">
+                <i class="fas fa-search"></i> Поиск пользователей
+            </h3>
+            <form method="get" action="{% url 'list_users' %}" class="search-form">
+                <div class="search-input-group">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        class="search-input" 
+                        placeholder="Поиск по имени, email или возрасту..." 
+                        value="{{ search_query }}"
+                    >
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
                 </div>
-                <div class="stat-label">Средний возраст</div>
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Искать
+                </button>
+                {% if search_query %}
+                <a href="{% url 'list_users' %}" class="reset-btn">
+                    <i class="fas fa-times"></i> Сбросить
+                </a>
+                {% endif %}
+            </form>
+            
+            {% if search_query %}
+            <div class="search-results-info">
+                <i class="fas fa-info-circle"></i>
+                Поиск по запросу: <strong class="search-highlight">{{ search_query }}</strong>
+                {% if users|length == 0 %}
+                    - ничего не найдено
+                {% else %}
+                    - найдено {{ users|length }} пользователей
+                {% endif %}
             </div>
-            <div class="stat-card">
-                <div class="stat-value">
-                    {% if users and max_age %}
-                        {{ max_age }}
-                    {% else %}
-                        -
-                    {% endif %}
-                </div>
-                <div class="stat-label">Максимальный возраст</div>
-            </div>
+            {% endif %}
         </div>
+
+        <!-- Статистика -->
+       
 
         <!-- Верхняя панель с кнопками -->
         <div class="header-actions">
             <div class="user-count">
-                🗃️ Всего записей: <strong>{{ users|length }}</strong>
+                <i class="fas fa-users"></i>
+                {% if search_query %}
+                    Найдено: <strong>{{ users|length }}</strong>
+                {% else %}
+                    Всего записей: <strong>{{ users|length }}</strong>
+                {% endif %}
             </div>
             <div>
-                <a href="/register" class="btn-primary-custom">
-                    <span>➕</span> Добавить пользователя
+                <a href="{% url 'register' %}" class="btn-primary-custom">
+                    <i class="fas fa-plus"></i> Добавить пользователя
                 </a>
-                <a href="/" class="btn-secondary-custom">
-                    <span>🏠</span> На главную
+                <a href="{% url 'home' %}" class="btn-secondary-custom">
+                    <i class="fas fa-home"></i> На главную
                 </a>
             </div>
         </div>
@@ -264,11 +379,11 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>👤 Имя</th>
-                            <th>🎂 Возраст</th>
-                            <th>📧 Email</th>
-                            <th>📅 Дата регистрации</th>
-                            <th>⚡ Действия</th>
+                            <th><i class="fas fa-user"></i> Имя</th>
+                            <th><i class="fas fa-birthday-cake"></i> Возраст</th>
+                            <th><i class="fas fa-envelope"></i> Email</th>
+                            <th><i class="fas fa-calendar"></i> Дата регистрации</th>
+                            <th><i class="fas fa-bolt"></i> Действия</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -281,7 +396,13 @@
                                         {{ user.name|first|upper }}
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600;">{{ user.name }}</div>
+                                        <div style="font-weight: 600;">
+                                            {% if search_query and search_query in user.name %}
+                                                {{ user.name|safe }}
+                                            {% else %}
+                                                {{ user.name }}
+                                            {% endif %}
+                                        </div>
                                         <div style="font-size: 12px; color: #666;">ID: {{ user.id }}</div>
                                     </div>
                                 </div>
@@ -293,27 +414,34 @@
                             </td>
                             <td>
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span>📧</span>
+                                    <i class="fas fa-envelope"></i>
                                     <a href="mailto:{{ user.email }}" style="color: #667eea; text-decoration: none;">
-                                        {{ user.email }}
+                                        {% if search_query and search_query in user.email %}
+                                            {{ user.email|safe }}
+                                        {% else %}
+                                            {{ user.email }}
+                                        {% endif %}
                                     </a>
                                 </div>
                             </td>
                             <td>
-    <span style="color: #666; font-size: 14px;">
-        {{ user.created_at|date:"d.m.Y" }}<br>
-        <small>{{ user.created_at|date:"H:i" }}</small>
-    </span>
-                </td>
-                                            <td>
-                    <div class="action-buttons">
-                        <a href="{% url 'user_detail' user.id %}" class="btn-action btn-view">
-                            👁️ Просмотр
-                        </a>
-                        
-                        
-                    </div>
-                </td>
+                                <span style="color: #666; font-size: 14px;">
+                                    {{ user.created_at|date:"d.m.Y" }}<br>
+                                    <small>{{ user.created_at|date:"H:i" }}</small>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'user_detail' user.id %}" class="btn-action btn-view">
+                                        <i class="fas fa-eye"></i> Просмотр
+                                    </a>
+                                        
+                               
+                                
+                                       
+                                 
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -324,31 +452,51 @@
             <nav aria-label="Навигация по страницам" style="margin-top: 30px;">
                 <ul class="pagination justify-content-center">
                     <li class="page-item disabled">
-                        <a class="page-link" href="#">← Назад</a>
+                        <a class="page-link" href="#"><i class="fas fa-arrow-left"></i> Назад</a>
                     </li>
                     <li class="page-item active"><a class="page-link" href="#">1</a></li>
                     <li class="page-item"><a class="page-link" href="#">2</a></li>
                     <li class="page-item"><a class="page-link" href="#">3</a></li>
                     <li class="page-item">
-                        <a class="page-link" href="#">Вперед →</a>
+                        <a class="page-link" href="#">Вперед <i class="fas fa-arrow-right"></i></a>
                     </li>
                 </ul>
             </nav>
         {% else %}
             <!-- Состояние "нет данных" -->
             <div class="empty-state">
-                <div class="empty-state-icon">👤</div>
-                <h3 style="color: #666; margin-bottom: 15px;">Пользователи не найдены</h3>
+                <div class="empty-state-icon">
+                    {% if search_query %}
+                        <i class="fas fa-search-minus"></i>
+                    {% else %}
+                        <i class="fas fa-users"></i>
+                    {% endif %}
+                </div>
+                <h3 style="color: #666; margin-bottom: 15px;">
+                    {% if search_query %}
+                        По запросу "{{ search_query }}" ничего не найдено
+                    {% else %}
+                        Пользователи не найдены
+                    {% endif %}
+                </h3>
                 <p style="color: #888; margin-bottom: 25px; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    В системе пока нет зарегистрированных пользователей. 
-                    Добавьте первого пользователя, чтобы начать работу.
+                    {% if search_query %}
+                        Попробуйте изменить поисковый запрос или сбросить фильтр
+                    {% else %}
+                        В системе пока нет зарегистрированных пользователей. 
+                        Добавьте первого пользователя, чтобы начать работу.
+                    {% endif %}
                 </p>
-                <a href="/register" class="btn-primary-custom">
-                    <span>➕</span> Добавить первого пользователя
+                {% if search_query %}
+                    <a href="{% url 'list_users' %}" class="btn-secondary-custom">
+                        <i class="fas fa-times"></i> Сбросить фильтр
+                    </a>
+                {% endif %}
+                <a href="{% url 'register' %}" class="btn-primary-custom">
+                    <i class="fas fa-plus"></i> Добавить пользователя
                 </a>
             </div>
         {% endif %}
-    
     </div>
 
     <!-- Bootstrap JS -->
@@ -356,28 +504,73 @@
 
     <!-- Дополнительные скрипты -->
     <script>
-        
-        
-        
-        // Экспорт в CSV (заглушка)
-        function exportToCSV() {
-            alert('Экспорт в CSV будет реализован позже!');
-            // В реальном приложении здесь будет логика экспорта
+        // Подсветка текста поиска в результатах
+        function highlightText(text, search) {
+            if (!search) return text;
+            const regex = new RegExp(`(${search})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
         }
 
-        // Поиск по таблице
-        function searchUsers() {
-            const input = document.getElementById('searchInput');
+        // Применяем подсветку при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchQuery = "{{ search_query }}";
+            if (searchQuery) {
+                // Подсвечиваем в таблице
+                const nameCells = document.querySelectorAll('.user-table td:nth-child(2) .fw-600');
+                const emailCells = document.querySelectorAll('.user-table td:nth-child(4) a');
+                
+                nameCells.forEach(cell => {
+                    if (searchQuery.toLowerCase() in cell.textContent.toLowerCase()) {
+                        cell.innerHTML = highlightText(cell.textContent, searchQuery);
+                    }
+                });
+                
+                emailCells.forEach(cell => {
+                    if (searchQuery.toLowerCase() in cell.textContent.toLowerCase()) {
+                        cell.innerHTML = highlightText(cell.textContent, searchQuery);
+                    }
+                });
+            }
+
+            // Автофокус на поле поиска
+            const searchInput = document.querySelector('input[name="search"]');
+            if (searchInput && !searchInput.value) {
+                searchInput.focus();
+            }
+
+            // Быстрый сброс поиска по клавише Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && searchInput.value) {
+                    window.location.href = "{% url 'list_users' %}";
+                }
+            });
+        });
+
+        // Клиентская фильтрация для мгновенного поиска (опционально)
+        function quickSearch() {
+            const input = document.getElementById('quickSearch');
             const filter = input.value.toLowerCase();
             const rows = document.querySelectorAll('.user-table tbody tr');
             
+            let visibleCount = 0;
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(filter) ? '' : 'none';
+                if (text.includes(filter)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
             });
+            
+            // Обновляем счетчик
+            const counter = document.querySelector('.user-count strong');
+            if (counter) {
+                counter.textContent = visibleCount;
+            }
         }
 
-        // Сортировка таблицы
+        // Сортировка таблицы (оставляем вашу функцию)
         function sortTable(columnIndex) {
             const table = document.querySelector('.user-table');
             const tbody = table.querySelector('tbody');
@@ -408,23 +601,6 @@
                 header.addEventListener('click', () => sortTable(index));
             });
         });
-
-        // Подсветка новых пользователей (за последние 24 часа)
-        function highlightNewUsers() {
-            const rows = document.querySelectorAll('.user-table tbody tr');
-            const now = new Date();
-            
-            rows.forEach(row => {
-                const dateCell = row.cells[4].textContent;
-                // Простая логика подсветки (в реальном приложении нужно парсить дату)
-                if (dateCell.includes('сегодня') || dateCell.includes('12.2025')) {
-                    row.style.backgroundColor = 'rgba(102, 255, 102, 0.1)';
-                }
-            });
-        }
-
-        // Вызываем подсветку при загрузке
-        highlightNewUsers();
     </script>
 </body>
 </html>
