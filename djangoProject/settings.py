@@ -3,21 +3,18 @@
 import os
 from pathlib import Path
 
-# ========== БАЗОВЫЕ НАСТРОЙКИ ==========
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ========== ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ==========
-# Секретный ключ - МОЖЕТ БЫТЬ В КОДЕ ТОЛЬКО ДЛЯ РАЗРАБОТКИ
-# Но лучше использовать os.getenv как в примере ниже
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-разработка-ключ-для-локального-использования')
 
-# Режим отладки - ВКЛЮЧЕН для разработки
-DEBUG = True  # Или os.getenv('DEBUG', 'True') == 'True'
 
-# Разрешенные хосты - ТОЛЬКО localhost
+DEBUG = True
+
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
-# ========== ПРИЛОЖЕНИЯ ==========
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,12 +22,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Твое приложение
     'main',
 ]
 
-# ========== MIDDLEWARE ==========
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,10 +35,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ========== URL КОНФИГУРАЦИЯ ==========
 ROOT_URLCONF = 'djangoProject.urls'
 
-# ========== ТЕМПЛАТЫ ==========
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -61,7 +53,7 @@ TEMPLATES = [
     },
 ]
 
-# ========== БАЗА ДАННЫХ ==========
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -69,15 +61,14 @@ DATABASES = {
     }
 }
 
-# ========== СТАТИЧЕСКИЕ ФАЙЛЫ ==========
+
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# ========== МЕДИА ФАЙЛЫ ==========
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ========== ОСТАЛЬНЫЕ НАСТРОЙКИ ==========
+
 WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
 # Пароли
@@ -88,7 +79,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Язык и время
+
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
@@ -96,18 +87,12 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ========== ДЛЯ РАЗРАБОТКИ - МОЖНО ДОБАВИТЬ ПОЗЖЕ ==========
-# CSRF доверенные источники (для localhost)
+
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
 
-# CORS (если будешь делать API)
-# CORS_ALLOWED_ORIGINS = ['http://localhost:3000']  # Для фронтенда на React
 
-# ========== ДЛЯ УДОБСТВА РАЗРАБОТКИ ==========
-# Показывать подробные ошибки
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-# Логирование в консоль
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
