@@ -1,4 +1,4 @@
-# main/urls.py - убедись что есть все маршруты
+
 from django.urls import path
 from . import views
 
