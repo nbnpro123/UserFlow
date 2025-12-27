@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e68590c8-f0a4-40f0-89d2-2c255c750419" name="Changes" comment="Добавление списка зависимостей&#10;Обновление безопасности">
-      <change beforePath="$PROJECT_DIR$/djangoProject/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoProject/settings.py" afterDir="false" />
+    <list default="true" id="e68590c8-f0a4-40f0-89d2-2c255c750419" name="Changes" comment=" 1">
+      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +137,7 @@
       <workItem from="1766591194049" duration="3671000" />
       <workItem from="1766667109924" duration="126000" />
       <workItem from="1766841058275" duration="2220000" />
-      <workItem from="1766843308829" duration="588000" />
+      <workItem from="1766843308829" duration="1277000" />
     </task>
     <task id="LOCAL-00001" summary="Обновление user_edit&#10;Добавление фильтров в list_users">
       <option name="closed" value="true" />
@@ -153,7 +155,39 @@
       <option name="project" value="LOCAL" />
       <updated>1766842448600</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Добавление списка зависимостей&#10;Обновление безопасности">
+      <option name="closed" value="true" />
+      <created>1766843926233</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1766843926233</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Добавление списка зависимостей&#10;Обновление безопасности">
+      <option name="closed" value="true" />
+      <created>1766844028568</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1766844028568</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Чистка кода">
+      <option name="closed" value="true" />
+      <created>1766844215504</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1766844215504</updated>
+    </task>
+    <task id="LOCAL-00006" summary=" 1">
+      <option name="closed" value="true" />
+      <created>1766844244047</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1766844244047</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,7 +196,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Обновление user_edit&#10;Добавление фильтров в list_users" />
     <MESSAGE value="Добавление списка зависимостей&#10;Обновление безопасности" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавление списка зависимостей&#10;Обновление безопасности" />
+    <MESSAGE value="Чистка кода" />
+    <MESSAGE value=" 1" />
+    <option name="LAST_COMMIT_MESSAGE" value=" 1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
