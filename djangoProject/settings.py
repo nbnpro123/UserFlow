@@ -50,10 +50,17 @@ TEMPLATES = [
 ]
 
 
+# Путь к базе проекта
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Создаем папку data, если её нет
+DATA_DIR = BASE_DIR / 'data'
+DATA_DIR.mkdir(exist_ok=True)  # Создаст папку автоматически
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATA_DIR / 'db.sqlite3',  # ← ВОТ ТАК! База в data/
     }
 }
 
