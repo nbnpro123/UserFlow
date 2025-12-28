@@ -1,0 +1,46 @@
+# .dockerignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Git
+.git/
+.gitignore
+
+# Секреты
+.env
+.env.local
+.env.*.local
+
+# Логи
+logs/
+*.log
+
+# База данных (но папку data оставляем, в ней может быть db.sqlite3 для разработки)
+# data/db.sqlite3  # Можешь раскомментировать, если хочешь игнорировать локальную БД

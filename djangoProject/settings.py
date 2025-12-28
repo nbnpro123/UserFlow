@@ -6,6 +6,63 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+
+
+# Для Docker: автоматически определяем, находимся ли в контейнере
+IN_DOCKER = os.environ.get('IN_DOCKER', False)
+
+# Настройки базы данных
+if IN_DOCKER:
+    # В Docker используем SQLite в папке /app/data
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': '/app/data/db.sqlite3',
+        }
+    }
+else:
+    # Локально используем обычный путь
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'data' / 'db.sqlite3',
+        }
+    }
+
+# Настройки статики для Docker
+if IN_DOCKER:
+    STATIC_ROOT = '/app/staticfiles'
+else:
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Whitenoise для раздачи статики
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <- Добавь эту строку
+    # ... остальные middleware
+]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-key-for-development')
 DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
